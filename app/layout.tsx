@@ -37,6 +37,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <Link href="/time-entries" className="hover:text-gray-900">
                 Time Entries
               </Link>
+              <Link href="/settings" className="hover:text-gray-900">
+                Settings
+              </Link>
             </nav>
           </header>
           <main className="flex-1">{children}</main>

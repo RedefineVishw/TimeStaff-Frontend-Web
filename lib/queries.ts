@@ -74,3 +74,32 @@ export function useDeleteTimeEntry() {
     },
   });
 }
+
+// --- Settings -------------------------------------------------------------
+// Single global config row (no per-user auth yet). The desktop app reads
+// idleTimeoutMinutes to decide how long with no input before it auto-stops
+// the running timer and discards that idle stretch.
+
+export interface AppSettings {
+  id: string;
+  idleTimeoutMinutes: number;
+  updatedAt: string;
+}
+
+export function useSettings() {
+  return useQuery({
+    queryKey: ["settings"],
+    queryFn: async () => (await api.get<AppSettings>("/settings")).data,
+  });
+}
+
+export function useUpdateSettings() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (idleTimeoutMinutes: number) =>
+      (await api.patch<AppSettings>("/settings", { idleTimeoutMinutes })).data,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+    },
+  });
+}
