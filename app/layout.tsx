@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -27,8 +28,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Providers>
-          <header className="border-b border-gray-200 px-6 py-3">
+          <header className="flex items-center justify-between border-b border-gray-200 px-6 py-3">
             <Image src="/logo.svg" alt="TimeStaff" width={140} height={28} priority />
+            <nav className="flex gap-4 text-sm font-medium text-gray-600">
+              <Link href="/" className="hover:text-gray-900">
+                Dashboard
+              </Link>
+              <Link href="/time-entries" className="hover:text-gray-900">
+                Time Entries
+              </Link>
+            </nav>
           </header>
           <main className="flex-1">{children}</main>
         </Providers>
