@@ -36,7 +36,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
 
 // Request interceptor — attaches the in-memory access token to every call.
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-    const isRefreshEndpoint = config.url?.includes("/auth/refresh-token");
+    const isRefreshEndpoint = config.url?.includes("/auth/refresh");
     const token = useAuthStore.getState().accessToken;
 
     // Skip attaching a (possibly stale/expired) token on the refresh call itself.
@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
         const status = error.response?.status;
-        const isRefreshEndpoint = originalRequest?.url?.includes("/auth/refresh-token");
+        const isRefreshEndpoint = originalRequest?.url?.includes("/auth/refresh");
 
         // 403 = authenticated but not permitted for this action — never a logout.
         if (status === 403) {
@@ -90,7 +90,7 @@ axiosInstance.interceptors.response.use(
                 // into a service file, and this one response never needs unwrapping
                 // beyond the access token itself.
                 const { data } = await axiosInstance.post<ApiEnvelope<{ accessToken: string }>>(
-                    "/auth/refresh-token",
+                    "/auth/refresh",
                 );
                 const newToken = data.data.accessToken;
 
